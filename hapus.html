@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Hapus dan</title>
+  </head>
+  <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+ <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+    <div class="logo">
+        <img src="img/image-galery 1.svg" alt="logo"/>
+        <img src="img/Website Galeri Foto.svg" alt="logo"/>
+
+    </div>
+</div>
+</nav>
+
+
+<div class="container py-5">
+    <h2 class="mb-4 text-center">Hapus dan Tambah</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="gallery">
+
+    </div>
+    <div class="mt-4">
+        <input type="file" id="fileInput" accept="image/*" class="form-control">
+        <button class="btn btn-primary mt-3" onclick="addImage()">Tambah Foto</button>
+        <button class="btn btn-danger mt-3" onclick="deleteAllImages()">Hapus Semua Foto</button>
+      </div>
+  </div>
+
+  <div class="container mt-5">
+    <h2 class="mb-4 text-center">Daftar Foto</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">Gambar</th>
+          <th scope="col">Nama</th>
+          <th scope="col">Deskripsi</th>
+        </tr>
+      </thead>
+      <tbody id="imageTableBody">
+
+      </tbody>
+    </table>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function addImage() {
+      var fileInput = document.getElementById('fileInput');
+      var files = fileInput.files;
+      if (files.length > 0) {
+        for (var i = 0; i < files.length; i++) {
+          var file = files[i];
+          if (file.type.match('image.*')) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              var imageSrc = e.target.result;
+              var gallery = document.getElementById('gallery');
+              var column = document.createElement('div');
+              column.className = 'col';
+              column.innerHTML = `
+                <div class="card">
+                  <img src="${imageSrc}" alt="Image" class="card-img-top gallery-img" onclick="deleteImage(this)">
+                  <div class="card-body">
+                    <p class="card-text text-center"<p>kelik untuk hapus</p>
+                  </div>
+                </div>
+              `;
+              gallery.appendChild(column);
+              var tableBody = document.getElementById('imageTableBody');
+              var newRow = tableBody.insertRow();
+              newRow.innerHTML = `
+                <td>${tableBody.rows.length}</td>
+                <td><img src="${imageSrc}" alt="Image" class="img-thumbnail" style="max-width: 100px;"></td>
+                <td>New Image</td>
+                <td>Description</td>
+              `;
+            }
+            reader.readAsDataURL(file);
+          }
+        }
+        fileInput.value = ''; 
+      }
+    }
+    function deleteImage(imageElement) {
+      var confirmDelete = confirm("Apakah Anda yakin ingin menghapus gambar ini?");
+      if (confirmDelete) {
+        var parentColumn = imageElement.closest('.col');
+        parentColumn.remove();
+        var tableRow = imageElement.closest('tr');
+        tableRow.remove();
+      }
+    }
+    function deleteAllImages() {
+      var confirmDeleteAll = confirm("Apakah Anda yakin ingin menghapus semua foto?");
+      if (confirmDeleteAll) {
+        var gallery = document.getElementById('gallery');
+        gallery.innerHTML = '';
+
+        // Clear the table
+        var tableBody = document.getElementById('imageTableBody');
+        tableBody.innerHTML = '';
+      }
+    }
+  </script>
+
+<section class="gallery min-vh-100"></section>
+
+<style>
+    body{
+         background-color: #dbdbf1;
+    }
+    .gallery-img {
+      width: 100%;
+      height: auto;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .gallery-img:hover {
+      transform: scale(1.1);
+    }
+    .logo {
+        display: flex;
+        align-items: center;
+    }
+</style>
+
+  </body>
+</html>
